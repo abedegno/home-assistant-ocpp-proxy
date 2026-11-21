@@ -21,7 +21,7 @@
       },
       "relay": {
         "title": "Transparent relay listener",
-        "description": "Point the charger at this host and port using /<chargepoint_id> and its original Basic credentials. Stop any other connection using this identity first. Both TLS paths are required together; without them WS is plaintext on a trusted LAN. Upstream TLS verification is always enabled.",
+        "description": "Point the charger at this host and port using /YOUR_CHARGEPOINT_ID and its original Basic credentials. Stop any other connection using this identity first. Both TLS paths are required together; without them WS is plaintext on a trusted LAN. Upstream TLS verification is always enabled.",
         "data": {
           "relay_host": "Listen address",
           "relay_port": "Charger connection port",
