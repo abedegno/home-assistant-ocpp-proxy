@@ -1,0 +1,92 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OCPP Charge Proxy",
+        "description": "Run the proxy inside Home Assistant, or connect to an optional standalone deployment. Native operation needs no broker or app.",
+        "data": {
+          "deployment": "Deployment"
+        }
+      },
+      "native": {
+        "title": "Provider connection",
+        "description": "Core restarts interrupt native proxy connections. Use your provider-assigned OCPP credentials. An account linked through a consumer API may not expose these credentials.",
+        "data": {
+          "mode": "Operating mode",
+          "server_hostname": "Provider OCPP host (optional port)",
+          "chargepoint_id": "Chargepoint ID",
+          "password": "OCPP password",
+          "power_entity": "Power sensor (emulator only, optional)"
+        }
+      },
+      "relay": {
+        "title": "Transparent relay listener",
+        "description": "Point the charger at this host and port using /<chargepoint_id> and its original Basic credentials. Stop any other connection using this identity first. Both TLS paths are required together; without them WS is plaintext on a trusted LAN. Upstream TLS verification is always enabled.",
+        "data": {
+          "relay_host": "Listen address",
+          "relay_port": "Charger connection port",
+          "relay_certfile": "TLS certificate chain path (optional)",
+          "relay_keyfile": "TLS private key path (optional)"
+        }
+      },
+      "emulator": {
+        "title": "Virtual charger identity",
+        "description": "When moving from a standalone emulator, stop it before finishing and copy its serial number and latest import register to preserve identity and energy continuity. The register is a first-start or migration seed, not a live meter adjustment.",
+        "data": {
+          "charger_model": "Charger model",
+          "charger_vendor": "Charger vendor",
+          "charger_serial": "Charger serial number",
+          "firmware_version": "Reported firmware",
+          "current_amps": "Maximum current (A)",
+          "initial_energy_wh": "Existing import register (Wh)"
+        }
+      },
+      "external": {
+        "title": "Standalone proxy",
+        "description": "Use an API URL reachable from Core; localhost usually does not address an app container. Before leaving a native emulator, copy its serial {serial} and register {energy_wh} Wh to the standalone app, then stop the current runtime before starting the replacement.",
+        "data": {
+          "api_url": "Standalone proxy API URL",
+          "power_entity": "Power sensor (emulator only, optional)"
+        }
+      },
+      "hassio_confirm": {
+        "title": "Standalone proxy discovered",
+        "description": "A standalone proxy was found at {url}. This explicitly configures an external connection; native operation does not require this app.",
+        "data": {
+          "power_entity": "Power sensor (emulator only, optional)"
+        }
+      },
+      "stop_native": {
+        "title": "Stop native proxy for handoff",
+        "description": "Stop and flush the native runtime before starting its standalone replacement. The next form shows its final serial/register. If you cancel after stopping, reload this integration to resume native operation. Complete the handoff before restarting Core.",
+        "data": {
+          "confirm_stop": "Stop the native proxy now"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot reach the standalone proxy API.",
+      "invalid_config": "Invalid configuration. Check the host, credentials, current and paired TLS paths.",
+      "handoff_serial_required": "Copy the existing emulator serial number before switching backends.",
+      "confirm_required": "Confirm stopping the native proxy before continuing.",
+      "cannot_stop": "Could not unload the native integration. Stop the handoff and check its status.",
+      "handoff_unavailable": "Cannot verify the saved emulator serial/register. Reload native operation or recover its saved state before switching."
+    },
+    "abort": {
+      "already_configured": "The proxy is already configured.",
+      "cannot_connect": "Cannot reach the discovered standalone proxy.",
+      "reconfigure_successful": "Proxy configuration updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Emulator power input",
+        "description": "This input applies only to emulator mode. Unavailable or invalid readings restore simulation. Use Reconfigure to change deployment, credentials, operating mode or listener settings.",
+        "data": {
+          "power_entity": "Power sensor (emulator only, optional)"
+        }
+      }
+    }
+  }
+}
