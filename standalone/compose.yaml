@@ -1,0 +1,19 @@
+services:
+  ocpp-proxy:
+    build:
+      context: ..
+      dockerfile: standalone/Dockerfile
+    restart: unless-stopped
+    environment:
+      IO_MODE: ${OCPP_MODE:-relay}
+      IO_SERVER_HOSTNAME: ${OCPP_SERVER_HOSTNAME:?Set the provider hostname}
+      IO_CHARGEPOINT_ID: ${OCPP_CHARGEPOINT_ID:?Set the chargepoint ID}
+      IO_PASSWORD: ${OCPP_PASSWORD:?Set the OCPP password}
+    ports:
+      - "127.0.0.1:8099:8099"
+      - "9000:9000"
+    volumes:
+      - ocpp-proxy-data:/data
+      - ./ssl:/ssl:ro
+volumes:
+  ocpp-proxy-data:

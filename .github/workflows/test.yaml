@@ -1,0 +1,32 @@
+name: Tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    name: Native integration (HA 2026.11.1)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install -r requirements-test.txt
+      - name: Engine, native lifecycle, migration and isolated-install tests
+        run: >-
+          python -m pytest tests -q --cov=custom_components.ocpp_charge_proxy
+          --cov-branch --cov-report=term-missing --cov-report=xml:coverage.xml
+          --cov-fail-under=70
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: native-integration-coverage
+          path: coverage.xml
+  standalone:
+    name: Optional standalone container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - run: docker build -f standalone/Dockerfile -t ocpp-proxy:test .
